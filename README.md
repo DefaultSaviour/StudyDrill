@@ -59,12 +59,6 @@ npm test        # tests the drill, checker, value types and rules
 
 If the AI says it's finished but didn't show **PASS**, tell it to run `npm run check`.
 
-## Branches
-
-- `main` — this blank, reusable drill.
-- `sc-900` — the original SC-900 drill with all its questions.
-- `maths-n5` — National 5 Maths in use.
-
 ## Credits
 
 Maths rendering uses [KaTeX](https://katex.org/) (MIT licence), included in `vendor/katex/`.
