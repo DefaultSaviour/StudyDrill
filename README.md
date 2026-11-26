@@ -4,20 +4,93 @@ A free study drill for any subject. It asks you questions, and it asks the ones 
 
 It works for exams (like IT certifications), school subjects (like maths) and topics you are learning on your own. It runs in your web browser. It does not need the internet, an account or any installing.
 
+
 ---
 
-## Try it (5 minutes, no experience needed)
+## Get started
 
-1. At the top of this page, click the green **Code** button, then click **Download ZIP**.
-2. Find the file `StudyDrill-main.zip` in your **Downloads** folder.
-3. **Unzip it.** This step is important: the drill does not work from inside the zip file.
-   - **Windows:** right-click the file, click **Extract All…**, then click **Extract**.
-   - **Mac:** double-click the file.
-4. Open the new **StudyDrill-main** folder.
-5. Double-click **index.html**. It opens in your web browser.
-6. Click one of the examples to try it.
+You need two things:
 
-### How to use the drill
+- **An AI assistant that can work with files in a folder**, for example [Antigravity](https://antigravity.google/) (free to start), [Claude Code](https://claude.com/claude-code) (needs a paid Claude plan) or [Cursor](https://cursor.com/) (free to start). The AI writes your questions and runs the checks.
+- **Node.js**, a free program that runs the checks. Download the "LTS" version from [nodejs.org](https://nodejs.org/) and install it like any other program. If it is missing, the AI will tell you.
+
+Then choose the way that suits you.
+
+### Option 1: Ask your AI assistant to do it (easiest)
+
+**A new project just for your drill**
+
+1. Make a new, empty folder, for example `Spanish Drill`. Use a new folder for each subject.
+2. Open your AI assistant and open that folder as a new project (usually **File → Open Folder**).
+3. Copy this message, change the last line to your subject, and send it to the AI:
+
+```text
+Download StudyDrill into this folder with:
+git clone https://github.com/DefaultSaviour/StudyDrill.git .
+(If git says the folder is not empty, clone into a temporary folder and
+move everything, including hidden files, into this folder.)
+Then read docs/AI_INSTRUCTIONS.md and follow docs/workflows/setup.md.
+Ask me the setup questions one at a time.
+My subject is: Spanish verbs
+```
+
+4. Close the project and open the folder again, so the AI loads the drill's own rules and commands (like `/setup` and `/add-questions`).
+
+**Add it to a project you already have**
+
+Open your project in your AI assistant and send this message (change the last line):
+
+```text
+Add StudyDrill to this project in a folder called study-drill:
+git clone https://github.com/DefaultSaviour/StudyDrill.git study-drill
+Then read study-drill/docs/AI_INSTRUCTIONS.md and follow
+study-drill/docs/workflows/setup.md. Run every npm command inside the
+study-drill folder. Ask me the setup questions one at a time.
+My subject is: National 5 Maths
+```
+
+Inside an existing project, the `/setup` and `/add-questions` shortcuts are not available. Ask in words instead, for example: *"Follow study-drill/docs/workflows/add-questions.md and add 10 questions on fractions."*
+
+### Option 2: Do it yourself with git
+
+**A new project just for your drill**
+
+```bash
+git clone https://github.com/DefaultSaviour/StudyDrill.git "Spanish Drill"
+```
+
+Open the `Spanish Drill` folder in your AI assistant as the project, and type **/setup**. (In Cursor, type: *Set up this drill using docs/workflows/setup.md*.)
+
+**Add it to a project you already have**
+
+```bash
+cd your-project
+git clone https://github.com/DefaultSaviour/StudyDrill.git study-drill
+```
+
+Then ask your AI assistant: *"Read study-drill/docs/AI_INSTRUCTIONS.md and follow study-drill/docs/workflows/setup.md. Run npm commands inside study-drill."*
+
+To get updates to the drill later, run `git pull` inside the drill folder.
+
+### What happens in the setup
+
+The AI asks you a few questions, one at a time:
+
+- **What are you studying?** For example "AZ-900", "National 5 Maths" or "Spanish verbs".
+- **How should the topics be organised?** You give it your own list, it finds the official one, or it makes them as you go.
+- **What kind of questions?** It suggests the best type for your subject: pick an answer, type the answer, or new numbers every time.
+- **Where should the facts come from?** Official websites, or your own notes.
+- **Which checks?** It suggests checks for impossible answers, like an IP address of 333.444.55.666 or a price of £14.999.
+
+Then ask for questions, for example **/add-questions 10 on past tense verbs**. Wait until the AI says the check **PASSED**. If it says it is finished but does not show PASS, tell it: *run npm run check*.
+
+### Open the drill
+
+Double-click **index.html** in the drill folder (or ask the AI to open it). It opens in your web browser. Press **F5** to see new questions after the AI adds them.
+
+Before you set it up, the drill shows three examples you can try: an IT exam, networking and maths.
+
+### Use the drill
 
 - Read the question and click an answer, or press **1**, **2**, **3** or **4**.
 - If you get it right, say whether you **knew it** or **guessed**. Be honest: guessed questions come back more often, which is what you want.
@@ -31,36 +104,22 @@ It works for exams (like IT certifications), school subjects (like maths) and to
 - If you clear your browser's history or "site data", your progress is deleted.
 - To keep a copy, click **Export progress**. It saves a small backup file. To bring it back, or to move it to another computer, click **Import progress** and choose that file.
 
----
+### Later
 
-## Make your own drill
+- Add more questions any time: **/add-questions** and the topic.
+- After a practice test somewhere else, type **/mock-review** and tell the AI which questions you got wrong. It turns them into new drill questions.
+- For a mock test inside the drill, type **/make-mock**.
 
-To make questions for your own subject, you need an **AI coding assistant**. The AI writes the questions, and the drill checks them for mistakes before you see them. These AI assistants can do it:
+<details>
+<summary>No AI assistant? Download it to try the examples</summary>
 
-| AI assistant | Cost |
-|---|---|
-| [Antigravity](https://antigravity.google/) (Google) | Free to start |
-| [Claude Code](https://claude.com/claude-code) (Anthropic) | Needs a paid Claude plan |
-| [Cursor](https://cursor.com/) | Free to start |
+1. At the top of this page, click the green **Code** button, then **Download ZIP**.
+2. Unzip it. On Windows: right-click the file, **Extract All…**, **Extract**. On a Mac: double-click it. (The drill does not work from inside the zip.)
+3. Open the **StudyDrill-main** folder and double-click **index.html**.
+4. Click one of the examples.
 
-You also need **Node.js**, a free program that runs the checks. Download the "LTS" version from [nodejs.org](https://nodejs.org/) and install it like any other program. (If you skip this, the AI will tell you it is missing.)
-
-### Steps
-
-1. Download and unzip StudyDrill, as in **Try it** above. Give the folder a name for your subject, for example `Spanish Drill`. Use a new copy for each subject.
-2. Open your AI assistant. Use **File → Open Folder** and choose your drill folder.
-3. In the AI's chat box, type **/setup** and press Enter. (In Cursor, type: *Set up this drill using docs/workflows/setup.md*.)
-4. The AI asks you a few questions, one at a time:
-   - **What are you studying?** For example "AZ-900", "National 5 Maths" or "Spanish verbs".
-   - **How should the topics be organised?** You can give it your own list of topics, ask it to find the official ones, or let it make them as you go.
-   - **What kind of questions?** It suggests the best type for your subject: pick an answer, type the answer, or questions with new numbers every time.
-   - **Where should the facts come from?** Official websites, or your own notes.
-   - **Which checks?** It suggests checks for impossible answers, like an IP address of 333.444.55.666 or a price of £14.999.
-5. Then type **/add-questions** and what you want, for example: `/add-questions 10 on past tense verbs`.
-6. Wait until the AI says the check **PASSED**. If it says it is finished but does not show PASS, type: *run npm run check*.
-7. Double-click **index.html** again (or press F5 if it is already open). Your questions are there.
-
-Add more questions any time with `/add-questions`. When you take a practice test somewhere else, type **/mock-review** and tell the AI which questions you got wrong. It turns them into new drill questions.
+To make your own questions you need an AI assistant (see **Get started**).
+</details>
 
 ---
 
@@ -69,9 +128,10 @@ Add more questions any time with `/add-questions`. When you take a practice test
 | Problem | What to do |
 |---|---|
 | index.html opens as text or code, not as the drill | Right-click **index.html**, choose **Open with**, then choose your web browser (Chrome, Edge, Firefox or Safari). |
-| The page is blank or broken | You probably opened it from inside the zip file. Unzip it first (step 3 of **Try it**). |
+| The page is blank or broken | If you downloaded the zip, you probably opened it from inside the zip file. Unzip it first. |
 | My progress is gone | Check you are using the same browser as before. If you exported a backup, click **Import progress**. |
-| The AI does not understand /setup | Make sure you opened the whole StudyDrill folder in the AI, not just one file. |
+| The AI does not understand /setup | Close the project and open the drill folder again, so the AI loads the drill's commands. If the drill is inside a bigger project, ask in words instead (see **Add it to a project you already have**). |
+| The AI says git is missing | Install Git from [git-scm.com](https://git-scm.com/downloads), close the AI assistant and open it again. Or use the zip download (under **Later**). |
 | The AI says Node.js or npm is missing | Install Node.js (LTS) from [nodejs.org](https://nodejs.org/), close the AI assistant, and open it again. |
 
 ---

@@ -8,6 +8,7 @@ Small pointer files load it automatically: `CLAUDE.md`, `.agents/rules/studydril
 A blank, reusable study drill for any subject: a certification exam, a school course, or a topic. It uses spaced repetition: missed and guessed questions come back more often.
 - Questions can be multiple choice, typed answers, dynamic (new values every attempt) or graph-based. Each subject switches on only what it needs (`features` in `src/config.js`).
 - One copy of the drill = one subject. For a new subject, make a new copy (download the zip again, or on GitHub use **Use this template** or a fork) and run the setup.
+- The drill may be the whole project, or a folder inside a bigger project (for example `study-drill/`). If it is a folder inside a project: run every `npm` command inside that folder, and read this file and `docs/workflows/` yourself, because the pointer files and slash commands only load when the drill folder is opened as the project.
 - The person may have downloaded a zip and may not know git or the command line. Do the technical steps for them and explain in plain words.
 - The person studying may be a beginner. Explain what you did in plain English, short sentences, British spelling. No jargon without a one-line explanation.
 
