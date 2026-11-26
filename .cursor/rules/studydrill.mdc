@@ -5,6 +5,6 @@ alwaysApply: true
 
 Read and follow docs/AI_INSTRUCTIONS.md before doing anything in this repo.
 Before writing or changing any question, read docs/QUESTION_RULES.md.
-For tasks, follow the matching guide in docs/workflows/ (new-exam, add-questions, make-mock, mock-review).
-After any change to src/bank.js or src/config.js, run `npm run check` and `npm test`; both must pass before you finish.
-Never weaken scripts/check-bank.js or the tests. Never change a question id or the storageKey. Never invent a fact.
+For tasks, follow the matching guide in docs/workflows/ (setup, add-questions, make-mock, mock-review).
+After any change to src/ or scripts/, run `npm run check` and `npm test`; both must pass before you finish.
+Never weaken scripts/check-bank.js or the tests. Never change a question id or the storageKey. Never invent a fact. In dynamic questions, every changing value comes from a value type in M. Never put personal details in any file.

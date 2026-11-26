@@ -121,3 +121,37 @@ test("parseBackup accepts only this drill's backups", () => {
   assert.equal(L.parseBackup("not json", "gh300-drill-v1"), null);
   assert.equal(L.parseBackup(JSON.stringify({ app: "gh300-drill-v1", stats: [] }), "gh300-drill-v1"), null);
 });
+
+test("presentQuestion supports dynamic input, plot and mcq generators", () => {
+  const M = require("../src/math-engine.js");
+  const dynInput = {
+    id: "d1-90", p: 1, t: "Eval",
+    generate(rng, engine) {
+      const a = engine.randInt(rng, 2, 5);
+      return { kind: "input", q: "Double " + a, answerType: "number", answer: 2 * a, displayAnswer: String(2 * a), w: "Multiply by two." };
+    },
+  };
+  const pq1 = L.presentQuestion(dynInput, seeded(11), M);
+  assert.equal(pq1.kind, "input");
+  assert.equal(pq1.answer, 4);
+
+  const pqFresh = L.presentFreshQuestion(dynInput, seeded(11), M, pq1.q);
+  assert.notEqual(pqFresh.q, pq1.q);
+
+  const dynPlot = {
+    id: "d1-91", p: 1, t: "Plot",
+    generate() {
+      return {
+        kind: "plot",
+        q: "Plot y = x",
+        visual: { type: "graph", xMin: -4, xMax: 4, yMin: -4, yMax: 4 },
+        plotSpec: { plotType: "line", m: 1, c: 0 },
+        displayAnswer: "y = x",
+        w: "Gradient 1, intercept 0.",
+      };
+    },
+  };
+  const pqp = L.presentQuestion(dynPlot, seeded(3), M);
+  assert.equal(pqp.kind, "plot");
+  assert.equal(pqp.plotSpec.m, 1);
+});

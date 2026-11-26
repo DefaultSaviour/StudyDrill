@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Drill</title>
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
 <style>
 :root {
   --bg: #f7f6f3; --card: #ffffff; --ink: #1d1b19; --muted: #6b665f; --line: #e2ded7; --soft: #f1efeb;
@@ -33,7 +34,16 @@ h1 { font-size: 1.35rem; margin: 0; }
 .meta { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
 .pill { font-size: 0.8rem; font-weight: 700; color: var(--pc); }
 .topic { font-size: 0.85rem; color: var(--muted); }
-.question { font-size: 1.18rem; line-height: 1.45; margin: 0 0 16px; font-weight: 700; }
+.badge { font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--soft); color: var(--muted); border: 1px solid var(--line); margin-left: auto; }
+.question { font-size: 1.18rem; line-height: 1.45; margin: 0 0 14px; font-weight: 700; }
+.math { font-family: "Cambria Math", "STIX Two Math", Georgia, serif; font-weight: 600; letter-spacing: 0.01em; }
+.katex { font-size: 1.06em; font-weight: 400; }
+.question .katex { font-weight: 600; }
+.math sup, sup { font-size: 0.72em; line-height: 0; vertical-align: super; }
+.radicand { border-top: 1px solid currentColor; padding: 0 2px; }
+.visual { margin: 0 0 14px; }
+.diagram { display: block; width: 100%; max-width: 400px; height: auto; margin: 0 auto; border-radius: 10px; }
+.diagram.is-interactive { cursor: crosshair; touch-action: none; }
 .options { display: grid; gap: 8px; }
 .opt { font: inherit; text-align: left; cursor: pointer; width: 100%; display: flex; align-items: flex-start; gap: 12px; background: var(--soft); color: var(--ink); border: 1px solid transparent; border-radius: 10px; padding: 12px 14px; min-height: 48px; }
 .opt:hover:not(:disabled) { border-color: var(--pc); }
@@ -44,10 +54,30 @@ h1 { font-size: 1.35rem; margin: 0; }
 .opt.is-correct { background: var(--ok-bg); border-color: var(--ok); }
 .opt.is-wrong { background: var(--no-bg); border-color: var(--no); }
 .opt.is-dim { opacity: 0.55; }
+.input-area { display: grid; gap: 10px; margin-bottom: 4px; }
+.input-prompt { margin: 0; font-size: 0.95rem; color: var(--muted); }
+.field-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.field-label { font-weight: 700; min-width: 36px; }
+.math-input { flex: 1; min-width: 180px; font: inherit; font-size: 1.05rem; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--soft); color: var(--ink); }
+.math-input:focus { outline: 2px solid var(--focus); outline-offset: 1px; background: var(--card); }
+.math-input.is-correct { background: var(--ok-bg); border-color: var(--ok); }
+.math-input.is-wrong { background: var(--no-bg); border-color: var(--no); }
+.input-hint { margin: 0; font-size: 0.85rem; color: var(--muted); }
+.keypad { display: flex; flex-wrap: wrap; gap: 6px; }
+.kbtn { font: inherit; font-size: 0.9rem; min-width: 36px; min-height: 36px; padding: 4px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; }
+.kbtn:hover:not(:disabled) { border-color: var(--pc); }
+.kbtn:disabled { opacity: 0.5; cursor: default; }
+.plot-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 0.85rem; color: var(--muted); margin: 4px 0 8px; }
+.plot-coords { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--ink); }
+.check-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 2px; }
+.check-hint { margin: 4px 0 0; font-size: 0.9rem; font-weight: 600; color: var(--no); }
 .feedback:empty { display: none; }
 .feedback { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
 .verdict { margin: 0 0 4px; font-weight: 700; }
 .verdict.ok { color: var(--ok); } .verdict.no { color: var(--no); }
+.expected-ans { margin: 4px 0 8px; font-weight: 700; }
+.steps { margin: 0 0 12px 20px; padding: 0; font-size: 0.92rem; }
+.steps li { margin-bottom: 4px; }
 .why { margin: 0 0 12px; }
 .src { margin: 0 0 12px; font-size: 0.85rem; }
 .src a { color: var(--muted); }
@@ -55,6 +85,7 @@ h1 { font-size: 1.35rem; margin: 0; }
 .actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .btn { font: inherit; font-size: 0.95rem; cursor: pointer; min-height: 44px; padding: 10px 18px; border-radius: 10px; border: 1px solid var(--line); background: var(--card); color: var(--ink); }
 .btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.btn:disabled { opacity: 0.55; cursor: default; }
 .empty-title { font-weight: 700; font-size: 1.1rem; margin: 0 0 6px; }
 .empty-body { margin: 0 0 14px; color: var(--muted); }
 .hint { color: var(--muted); font-size: 0.82rem; margin: 10px 2px 0; }
@@ -107,7 +138,7 @@ button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
   </div>
 
   <main id="card"></main>
-  <p class="hint">Keys: 1–4 to answer, K if you knew it, G if you guessed, N for next.</p>
+  <p class="hint" id="keyhint">Keys: 1–4 to answer, K if you knew it, G if you guessed, N for next.</p>
 
   <section class="panel">
     <h2>Trouble questions</h2>
@@ -137,6 +168,10 @@ button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 </div>
 
 <script src="src/config.js"></script>
+<script src="src/math-engine.js"></script>
+<script src="src/value-types.js"></script>
+<script src="vendor/katex/katex.min.js"></script>
+<script src="src/visuals.js"></script>
 <script src="src/bank.js"></script>
 <script src="src/logic.js"></script>
 <script src="src/app.js"></script>

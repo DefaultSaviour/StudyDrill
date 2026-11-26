@@ -1,6 +1,5 @@
 // Drill logic. Pure functions only: no page, no storage.
 // That means every function here can be tested in Node (see tests/).
-// Ported from the SC-900 drill, which had the same rules.
 const LOGIC = (function () {
 "use strict";
 
@@ -15,15 +14,124 @@ function shuffle(arr, rng) {
   return a;
 }
 
-// Shuffle a question's options and remember where the right one went.
-// The bank can store the answer in any position: the user never sees it there.
-function presentQuestion(q, rng) {
+// The toolkit a dynamic generator gets as M in generate(rng, M):
+// the maths helpers plus the value types (IP addresses, ports, dates…).
+function loadValueTypes() {
+  if (typeof VALUE_TYPES !== "undefined") return VALUE_TYPES;
+  if (typeof require === "function") {
+    try { return require("./value-types.js"); } catch (e) { return null; }
+  }
+  return null;
+}
+
+function resolveMathEngine(mathEngine) {
+  let engine = mathEngine || null;
+  if (!engine && typeof MATH_ENGINE !== "undefined") engine = MATH_ENGINE;
+  if (!engine && typeof require === "function") {
+    try { engine = require("./math-engine.js"); } catch (e) { engine = null; }
+  }
+  const vt = loadValueTypes();
+  if (vt && (!engine || !engine.randPrivateIPv4)) engine = Object.assign({}, engine || {}, vt);
+  return engine;
+}
+
+// Build a presentable instance for a question:
+//   - static MCQ ({ o, a, q, w })
+//   - dynamic generator ({ generate(rng, MATH_ENGINE) }) returning mcq, input, or plot
+function presentQuestion(q, rng, mathEngine) {
+  const engine = resolveMathEngine(mathEngine);
+
+  if (typeof q.generate === "function") {
+    const inst = q.generate(rng, engine);
+    const kind = inst.kind || q.kind || (Array.isArray(inst.o) ? "mcq" : "input");
+
+    if (kind === "mcq") {
+      const order = shuffle(inst.o.map((_, i) => i), rng);
+      return {
+        id: q.id,
+        kind: "mcq",
+        q: inst.q,
+        options: order.map(i => inst.o[i]),
+        correctIndex: order.indexOf(inst.a),
+        w: inst.w,
+        visual: inst.visual || null,
+        paper: inst.paper || q.paper || null,
+        src: inst.src || q.src,
+      };
+    }
+
+    if (kind === "plot") {
+      return {
+        id: q.id,
+        kind: "plot",
+        q: inst.q,
+        hint: inst.hint || null,
+        plotSpec: inst.plotSpec,
+        visual: inst.visual,
+        displayAnswer: inst.displayAnswer,
+        steps: inst.steps || [],
+        w: inst.w,
+        paper: inst.paper || q.paper || null,
+        src: inst.src || q.src,
+      };
+    }
+
+    return {
+      id: q.id,
+      kind: "input",
+      q: inst.q,
+      prompt: inst.prompt || null,
+      hint: inst.hint || null,
+      fields: inst.fields || null,
+      answer: inst.answer,
+      answerType: inst.answerType || "number",
+      tolerance: inst.tolerance,
+      sigFigs: inst.sigFigs,
+      requireSimplified: inst.requireSimplified,
+      requireExpanded: inst.requireExpanded,
+      requireFactorised: inst.requireFactorised,
+      requireCompletedSquare: inst.requireCompletedSquare,
+      requireSimplifiedSurd: inst.requireSimplifiedSurd,
+      requireRationalDenominator: inst.requireRationalDenominator,
+      requireSubject: inst.requireSubject,
+      allowRhsOnly: inst.allowRhsOnly,
+      displayAnswer: inst.displayAnswer,
+      steps: inst.steps || [],
+      w: inst.w,
+      visual: inst.visual || null,
+      paper: inst.paper || q.paper || null,
+      src: inst.src || q.src,
+    };
+  }
+
+  // Static MCQ (classic StudyDrill format)
   const order = shuffle(q.o.map((_, i) => i), rng);
   return {
     id: q.id,
+    kind: "mcq",
+    q: q.q,
     options: order.map(i => q.o[i]),
     correctIndex: order.indexOf(q.a),
+    w: q.w,
+    visual: q.visual || null,
+    paper: q.paper || null,
+    src: q.src,
   };
+}
+
+function questionSignature(pq) {
+  return pq.q + " || " + (pq.displayAnswer || "");
+}
+
+// Re-roll dynamic generators up to maxTries times so the same question/answer isn't repeated consecutively.
+function presentFreshQuestion(q, rng, mathEngine, previousSig, maxTries) {
+  const limit = maxTries || 6;
+  let pq = presentQuestion(q, rng, mathEngine);
+  if (typeof q.generate !== "function" || !previousSig) return pq;
+  for (let i = 1; i < limit && (pq.q === previousSig || questionSignature(pq) === previousSig); i++) {
+    pq = presentQuestion(q, rng, mathEngine);
+  }
+  return pq;
 }
 
 // How many dated attempts to keep per question. Totals are never capped.
@@ -196,7 +304,7 @@ function parseBackup(text, storageKey) {
 }
 
 return {
-  shuffle, presentQuestion, emptyStat, historyOf, recordAnswer, mergeHistory,
+  shuffle, presentQuestion, presentFreshQuestion, emptyStat, historyOf, recordAnswer, mergeHistory,
   trend, troubleList, weight, isWeak, isUnseen, pickNext, mergeStats,
   partSummary, parseBackup, HISTORY_CAP,
 };
