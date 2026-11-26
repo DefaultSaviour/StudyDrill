@@ -5,6 +5,7 @@
   "description": "Blank, reusable spaced-repetition exam drill with an AI question checker. No dependencies.",
   "scripts": {
     "check": "node scripts/check-bank.js",
-    "test": "node --test"
+    "test": "node --test",
+    "examples": "node scripts/make-example-pages.js"
   }
 }

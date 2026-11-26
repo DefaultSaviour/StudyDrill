@@ -7,7 +7,8 @@ Small pointer files load it automatically: `CLAUDE.md`, `.agents/rules/studydril
 
 A blank, reusable study drill for any subject: a certification exam, a school course, or a topic. It uses spaced repetition: missed and guessed questions come back more often.
 - Questions can be multiple choice, typed answers, dynamic (new values every attempt) or graph-based. Each subject switches on only what it needs (`features` in `src/config.js`).
-- One copy of the repo = one subject. For a new subject, make a new copy (on GitHub: **Use this template**) and run the setup.
+- One copy of the drill = one subject. For a new subject, make a new copy (download the zip again, or on GitHub use **Use this template** or a fork) and run the setup.
+- The person may have downloaded a zip and may not know git or the command line. Do the technical steps for them and explain in plain words.
 - The person studying may be a beginner. Explain what you did in plain English, short sentences, British spelling. No jargon without a one-line explanation.
 
 ## Files
@@ -50,4 +51,5 @@ A blank, reusable study drill for any subject: a certification exam, a school co
 6. Never invent random values in a dynamic question. Use the value types in `M`. If one is missing, add it with a test first.
 7. Do not create `AGENTS.md` or `GEMINI.md` at the repo root. The tracker is `CLAUDE.md`.
 8. Do not put personal details (names, scores, dates of exams, health, money) in any file. This repo may be public.
-9. When the task is done, commit with a clear message. Push only if the person asks.
+9. When the task is done, if the folder is a git repository, commit with a clear message. If it is not (a downloaded zip), do not run git commands; just say what changed. Push only if the person asks.
+10. If `node` or `npm` is missing, stop and tell the person to install Node.js (the LTS version) from https://nodejs.org/ and then reopen the AI tool. Do not skip the checks.

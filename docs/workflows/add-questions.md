@@ -15,5 +15,5 @@
 10. Run `npm run check`. Fix every ERROR. Read every WARNING and fix it, or say why it is fine. A rule pack error means the question contains an impossible value: fix the question.
 11. Run `npm test`. 0 failures.
 12. If you notice a kind of mistake the checker did not catch, propose a new rule for `src/subject-rules.js` (with good and bad examples).
-13. Update `CLAUDE.md`. Commit.
+13. Update `CLAUDE.md`. Commit, if the folder is a git repository.
 14. Tell the person: how many you added, their ids, which are dynamic, the twin pairs, and the last lines of `npm run check`.

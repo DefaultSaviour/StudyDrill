@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<!-- Made by scripts/make-example-pages.js from index.html. Do not edit by hand. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drill</title>
+<link rel="stylesheet" href="../../vendor/katex/katex.min.css">
+<style>
+:root {
+  --bg: #f7f6f3; --card: #ffffff; --ink: #1d1b19; --muted: #6b665f; --line: #e2ded7; --soft: #f1efeb;
+  --p1: #6b4de6; --p2: #a16207; --p3: #0369a1; --p4: #047857; --p5: #be185d; --p6: #4d7c0f;
+  --ok: #1f8a4c; --ok-bg: #e7f6ec; --no: #c2412d; --no-bg: #fcebe7; --focus: #2563eb;
+  --font: "Atkinson Hyperlegible", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #17161a; --card: #201e24; --ink: #eeebe6; --muted: #9c948a; --line: #322f36; --soft: #29262d;
+    --p1: #b3a0ff; --p2: #e6bc5c; --p3: #6fc2ee; --p4: #56cfa0; --p5: #f49ac1; --p6: #a3d96b;
+    --ok: #6fd69a; --ok-bg: #1b3326; --no: #f0917f; --no-bg: #3a221e; --focus: #8ab4ff;
+  }
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 17px; line-height: 1.5; }
+.wrap { max-width: 680px; margin: 0 auto; padding: 20px 16px 48px; }
+header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+h1 { font-size: 1.35rem; margin: 0; }
+#session { color: var(--muted); font-size: 0.9rem; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; margin-bottom: 16px; }
+.seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: inherit; font-size: 0.85rem; cursor: pointer; border: 1px solid var(--line); background: var(--card); color: var(--muted); padding: 6px 12px; border-radius: 999px; min-height: 36px; }
+.chip[aria-pressed="true"] { color: var(--ink); border-color: var(--c, var(--ink)); box-shadow: inset 0 0 0 1px var(--c, var(--ink)); }
+.chip[data-part][aria-pressed="true"]::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--c); margin-right: 7px; vertical-align: 1px; }
+#card { --pc: var(--p1); background: var(--card); border: 1px solid var(--line); border-left: 5px solid var(--pc); border-radius: 14px; padding: 20px 20px 18px; }
+.meta { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.pill { font-size: 0.8rem; font-weight: 700; color: var(--pc); }
+.topic { font-size: 0.85rem; color: var(--muted); }
+.badge { font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--soft); color: var(--muted); border: 1px solid var(--line); margin-left: auto; }
+.question { font-size: 1.18rem; line-height: 1.45; margin: 0 0 14px; font-weight: 700; }
+.math { font-family: "Cambria Math", "STIX Two Math", Georgia, serif; font-weight: 600; letter-spacing: 0.01em; }
+.katex { font-size: 1.06em; font-weight: 400; }
+.question .katex { font-weight: 600; }
+.math sup, sup { font-size: 0.72em; line-height: 0; vertical-align: super; }
+.radicand { border-top: 1px solid currentColor; padding: 0 2px; }
+.visual { margin: 0 0 14px; }
+.diagram { display: block; width: 100%; max-width: 400px; height: auto; margin: 0 auto; border-radius: 10px; }
+.diagram.is-interactive { cursor: crosshair; touch-action: none; }
+.options { display: grid; gap: 8px; }
+.opt { font: inherit; text-align: left; cursor: pointer; width: 100%; display: flex; align-items: flex-start; gap: 12px; background: var(--soft); color: var(--ink); border: 1px solid transparent; border-radius: 10px; padding: 12px 14px; min-height: 48px; }
+.opt:hover:not(:disabled) { border-color: var(--pc); }
+.opt:disabled { cursor: default; }
+.key { flex: none; width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center; font-size: 0.8rem; font-weight: 700; border: 1px solid var(--line); color: var(--muted); background: var(--card); }
+.opt-text { flex: 1; }
+.mark { flex: none; font-weight: 700; }
+.opt.is-correct { background: var(--ok-bg); border-color: var(--ok); }
+.opt.is-wrong { background: var(--no-bg); border-color: var(--no); }
+.opt.is-dim { opacity: 0.55; }
+.input-area { display: grid; gap: 10px; margin-bottom: 4px; }
+.input-prompt { margin: 0; font-size: 0.95rem; color: var(--muted); }
+.field-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.field-label { font-weight: 700; min-width: 36px; }
+.math-input { flex: 1; min-width: 180px; font: inherit; font-size: 1.05rem; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--soft); color: var(--ink); }
+.math-input:focus { outline: 2px solid var(--focus); outline-offset: 1px; background: var(--card); }
+.math-input.is-correct { background: var(--ok-bg); border-color: var(--ok); }
+.math-input.is-wrong { background: var(--no-bg); border-color: var(--no); }
+.input-hint { margin: 0; font-size: 0.85rem; color: var(--muted); }
+.keypad { display: flex; flex-wrap: wrap; gap: 6px; }
+.kbtn { font: inherit; font-size: 0.9rem; min-width: 36px; min-height: 36px; padding: 4px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; }
+.kbtn:hover:not(:disabled) { border-color: var(--pc); }
+.kbtn:disabled { opacity: 0.5; cursor: default; }
+.plot-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 0.85rem; color: var(--muted); margin: 4px 0 8px; }
+.plot-coords { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--ink); }
+.check-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 2px; }
+.check-hint { margin: 4px 0 0; font-size: 0.9rem; font-weight: 600; color: var(--no); }
+.feedback:empty { display: none; }
+.feedback { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+.verdict { margin: 0 0 4px; font-weight: 700; }
+.verdict.ok { color: var(--ok); } .verdict.no { color: var(--no); }
+.expected-ans { margin: 4px 0 8px; font-weight: 700; }
+.steps { margin: 0 0 12px 20px; padding: 0; font-size: 0.92rem; }
+.steps li { margin-bottom: 4px; }
+.why { margin: 0 0 12px; }
+.src { margin: 0 0 12px; font-size: 0.85rem; }
+.src a { color: var(--muted); }
+.ask { margin: 0 0 8px; color: var(--muted); font-size: 0.92rem; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn { font: inherit; font-size: 0.95rem; cursor: pointer; min-height: 44px; padding: 10px 18px; border-radius: 10px; border: 1px solid var(--line); background: var(--card); color: var(--ink); }
+.btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.btn:disabled { opacity: 0.55; cursor: default; }
+.empty-title { font-weight: 700; font-size: 1.1rem; margin: 0 0 6px; }
+.empty-body { margin: 0 0 14px; color: var(--muted); }
+.hint { color: var(--muted); font-size: 0.82rem; margin: 10px 2px 0; }
+.hist { margin: 0 0 12px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 0.85rem; color: var(--muted); }
+.dots { display: inline-flex; gap: 4px; align-items: center; }
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.dot.k { background: var(--ok); } .dot.g { background: var(--p2); } .dot.w { background: var(--no); }
+.verdict-tag { font-weight: 700; color: var(--ink); }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.8rem; color: var(--muted); margin: 0 0 14px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.trouble { display: grid; gap: 12px; }
+.trow { display: grid; gap: 5px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+.trow:last-child { border-bottom: none; }
+.trow-q { font-size: 0.9rem; }
+.trow-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 0.8rem; color: var(--muted); }
+.trow-part { font-weight: 700; color: var(--pc); }
+.trow-why { background: var(--soft); border-left: 3px solid var(--pc); border-radius: 8px; padding: 10px 12px; font-size: 0.86rem; }
+.trow-why p { margin: 0 0 6px; }
+[hidden] { display: none !important; }
+section.panel { margin-top: 22px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+section.panel h2 { font-size: 1rem; margin: 0 0 4px; }
+section.panel p { margin: 0 0 12px; color: var(--muted); font-size: 0.9rem; }
+.prow { margin-bottom: 14px; }
+.prow-head { display: flex; justify-content: space-between; gap: 8px; font-size: 0.92rem; }
+.prow-name { font-weight: 700; color: var(--pc); }
+.prow-pct, .prow-foot { color: var(--muted); font-size: 0.85rem; }
+.bar { height: 6px; background: var(--soft); border-radius: 999px; overflow: hidden; margin: 6px 0 4px; }
+.fill { height: 100%; background: var(--pc); border-radius: 999px; }
+.panel-foot { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
+.linkbtn { font: inherit; font-size: 0.85rem; background: none; border: none; color: var(--muted); text-decoration: underline; cursor: pointer; padding: 6px 0; }
+#iomsg { font-size: 0.85rem; color: var(--muted); }
+button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+@media (hover: none) { .hint { display: none; } }
+.example-links { margin: 0 0 4px; padding-left: 20px; display: grid; gap: 8px; }
+.example-links a { color: var(--focus, #2563eb); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 id="title">Drill</h1>
+    <span id="session">No answers yet this session</span>
+  </header>
+
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Domains to include" id="partchips"></div>
+    <div class="seg" role="group" aria-label="Question mode">
+      <button class="chip" data-mode="mixed" aria-pressed="true">Mixed</button>
+      <button class="chip" data-mode="weak" aria-pressed="false">Weak spots</button>
+      <button class="chip" data-mode="new" aria-pressed="false">New<span id="newcount"></span></button>
+    </div>
+  </div>
+
+  <main id="card"></main>
+  <p class="hint" id="keyhint">Keys: 1–4 to answer, K if you knew it, G if you guessed, N for next.</p>
+
+  <section class="panel">
+    <h2>Trouble questions</h2>
+    <p>Questions you have missed or guessed, worst first. The dots are your attempts, oldest to newest.</p>
+    <p class="legend">
+      <span><i class="dot k"></i>knew it</span>
+      <span><i class="dot g"></i>guessed</span>
+      <span><i class="dot w"></i>wrong</span>
+    </p>
+    <div class="trouble" id="trouble"></div>
+    <div class="panel-foot"><button class="linkbtn" id="troubletoggle" type="button" hidden>Show all</button></div>
+  </section>
+
+  <section class="panel">
+    <h2>Progress</h2>
+    <p id="total"></p>
+    <div id="parts-progress"></div>
+    <p>Progress is saved in this browser only. Use Export to keep a backup or to move it to another computer.</p>
+    <div class="panel-foot">
+      <button class="linkbtn" id="export" type="button">Export progress</button>
+      <button class="linkbtn" id="import" type="button">Import progress</button>
+      <input type="file" id="importfile" accept=".json,application/json" hidden>
+      <button class="linkbtn" id="reset" type="button">Reset progress</button>
+      <span id="iomsg" aria-live="polite"></span>
+    </div>
+  </section>
+</div>
+
+<script src="config.js"></script>
+<script src="../../src/math-engine.js"></script>
+<script src="../../src/value-types.js"></script>
+<script src="../../vendor/katex/katex.min.js"></script>
+<script src="../../src/visuals.js"></script>
+<script src="bank.js"></script>
+<script src="../../src/logic.js"></script>
+<script src="../../src/app.js"></script>
+</body>
+</html>

@@ -2,6 +2,13 @@
 // All quiz selection and grading rules live in logic.js, math-engine.js, and visuals.js.
 (function () {
   "use strict";
+  // Example drills linked from the empty screen. Each folder has a drill.html
+  // made by scripts/make-example-pages.js.
+  const EXAMPLE_PAGES = [
+    ["gh300", "GitHub Copilot exam (GH-300): multiple choice"],
+    ["networking", "IPv4 networking: new addresses every time"],
+    ["maths-n5", "National 5 Maths: type the answer, plot graphs"],
+  ];
   const PARTS = Object.keys(CONFIG.domains).map(Number);
   const KEYPAD_SYMBOLS = ["²", "³", "√", "π", "°", "±", "≤", "≥", "/"];
 
@@ -209,11 +216,24 @@
       new: ["You've seen every question in these domains", "Switch to Mixed or Weak spots, or pick other domains."],
     };
     if (!CONFIG.exam || PARTS.length === 0 || BANK.length === 0) {
+      const notSetUp = !CONFIG.exam || PARTS.length === 0;
       card.append(
-        el("p", "empty-title", "Ready for your first study section"),
-        el("p", "empty-body", !CONFIG.exam || PARTS.length === 0
-          ? "Nothing is set up yet. Ask your AI assistant to run the setup: docs/workflows/setup.md (/setup)."
-          : "SCQF Level 5 Maths is configured with 0 live questions. Share your study notes or tell your AI assistant which topic you are studying to add questions."));
+        el("p", "empty-title", notSetUp ? "This drill is empty" : CONFIG.exam + " has no questions yet"),
+        el("p", "empty-body", notSetUp
+          ? "To make your own, follow \"Make your own drill\" in the README file. Or try one of the examples first:"
+          : "Ask your AI assistant to add questions: /add-questions, then the topic you are studying."));
+      // Only the blank drill (in the repo's root folder) links to the examples.
+      if (notSetUp && !/\/examples\//.test(location.pathname)) {
+        const list = el("ul", "example-links");
+        for (const [folder, label] of EXAMPLE_PAGES) {
+          const li = el("li");
+          const a = el("a", null, label);
+          a.href = "examples/" + folder + "/drill.html";
+          li.append(a);
+          list.append(li);
+        }
+        card.append(list);
+      }
       return;
     }
     const [title, body] = EMPTY[mode] || ["No questions for this selection", "Select at least one domain above."];

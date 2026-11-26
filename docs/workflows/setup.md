@@ -6,7 +6,7 @@ Ask the questions below ONE AT A TIME, in plain words, and wait for each answer.
 
 ## Before you start
 
-- Check `src/bank.js` is empty and `exam` in `src/config.js` is empty. If either already has content, STOP and ask: this copy is already set up. A new subject needs a new copy of the repo (on GitHub: **Use this template**).
+- Check `src/bank.js` is empty and `exam` in `src/config.js` is empty. If either already has content, STOP and ask: this copy is already set up. A new subject needs a new copy of the drill (download the zip again, or on GitHub use **Use this template**).
 
 ## 1. What are you studying?
 
@@ -93,5 +93,5 @@ Use the files in `examples/` as models: `gh300` (multiple-choice exam), `network
    - **Exam**: the name, the official link and date, the domains table (or "built as we go").
    - **Exam traps**: anything surprising you found (renamed terms, recent syllabus changes, duplicated lines on the official page).
    - **Next Up**: "add questions, heaviest domain first" (or "add questions on <first topic>").
-4. Commit.
+4. Commit, if the folder is a git repository.
 5. Tell the person, in a short summary: the domains, the features, the rule packs, the subject rules, and what to type next (`/add-questions`).

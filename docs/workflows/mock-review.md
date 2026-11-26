@@ -13,4 +13,4 @@ Every miss and every guess from a mock becomes drill questions.
 6. If the mock used an old or retired name, add it to `bannedTerms` in `src/config.js` with a one-line reason.
 7. Write `docs/mock-reviews/<YYYY-MM-DD>-<mock name>.md`: score; a table of misses (question, answer, what was picked, type); wrong answer keys; new question ids; one "deciding question" rule per miss.
 8. Run `npm run check` and `npm test`. Both must pass.
-9. Update `CLAUDE.md`. Commit.
+9. Update `CLAUDE.md`. Commit, if the folder is a git repository.

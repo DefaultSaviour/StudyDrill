@@ -330,3 +330,19 @@ test("a source can be a file in the repo, but it must exist", () => {
   const escape = netQ(); escape.src = "docs/../../etc/passwd";
   assert.ok(checkBank([escape], cfg).errors.some(e => e.includes("does not exist")));
 });
+
+// ── Example pages ──
+test("every example has an up-to-date drill.html (run npm run examples if this fails)", () => {
+  const fs = require("fs");
+  const path = require("path");
+  const { buildExamplePage, exampleFolders } = require("../scripts/make-example-pages.js");
+  const root = path.join(__dirname, "..");
+  const expected = buildExamplePage(fs.readFileSync(path.join(root, "index.html"), "utf8"));
+  const folders = exampleFolders();
+  assert.ok(folders.length >= 3);
+  for (const name of folders) {
+    const file = path.join(root, "examples", name, "drill.html");
+    assert.ok(fs.existsSync(file), "missing examples/" + name + "/drill.html");
+    assert.equal(fs.readFileSync(file, "utf8"), expected, "examples/" + name + "/drill.html is out of date");
+  }
+});
